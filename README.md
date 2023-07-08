@@ -4,6 +4,6 @@ I'm a bit behind.
 
 ## Licence
 
-Licenced under the MIT License.
+Licensed under the MIT License.
 
-Copyright Douglas F Shearer 2023.
+Copyright (c) Douglas F Shearer 2023.
