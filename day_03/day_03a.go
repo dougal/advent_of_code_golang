@@ -34,7 +34,7 @@ func rucksackPriority(s string) int {
 	}
 
 	var currentChar byte;
-	for i := halfSackSize + 1; i < sackSize; i++ {
+	for i := halfSackSize; i < sackSize; i++ {
 		currentChar = s[i]
 		_, exists := leftSide[currentChar]
 		if exists {
