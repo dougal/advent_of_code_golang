@@ -50,20 +50,24 @@ func summation() int {
 
   for scanner.Scan() {
     line := scanner.Text()
-    digits := []int{}
-
-    for i := 0; i < len(line); i++ {
-      haystack := line[i:]
-      for needle, n := range wordNumbers {
-	if strings.HasPrefix(haystack, needle) {
-	  digits = append(digits, n)
-	  break
-	}
-      }
-    }
-
-    sum += digits[0] * 10 + digits[len(digits) - 1]
+    sum += lineToCalibaration(line)
   }
 
   return sum
+}
+
+func lineToCalibaration(line string) int {
+  digits := []int{}
+
+  for i := 0; i < len(line); i++ {
+    haystack := line[i:]
+    for needle, n := range wordNumbers {
+      if strings.HasPrefix(haystack, needle) {
+	digits = append(digits, n)
+	break
+      }
+    }
+  }
+
+  return digits[0] * 10 + digits[len(digits) - 1]
 }
