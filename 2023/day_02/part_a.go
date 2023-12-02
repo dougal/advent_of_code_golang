@@ -20,10 +20,10 @@ func main() {
     log.Fatal(err)
   }
 
-  fmt.Println(sum(f))
+  fmt.Println(sumPossibleGames(f))
 }
 
-func sum(lines io.Reader) int {
+func sumPossibleGames(lines io.Reader) int {
   scanner := bufio.NewScanner(lines)
   scanner.Split(bufio.ScanLines)
 

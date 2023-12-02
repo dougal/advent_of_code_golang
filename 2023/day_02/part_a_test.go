@@ -25,8 +25,8 @@ func TestPossibleLineId(t *testing.T) {
   }
 }
 
-func TestSum(t *testing.T) {
-  s := sum(strings.NewReader(example))
+func TestSumPossibleGames(t *testing.T) {
+  s := sumPossibleGames(strings.NewReader(example))
   if s != 8 {
     t.Fatalf("Expected 8 got %d", s)
   }
