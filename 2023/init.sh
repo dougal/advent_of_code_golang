@@ -14,6 +14,7 @@ go mod init dougal/advent_of_code_golang/2023/part_a
 echo "package main
 
 import (
+  \"bufio\"
   \"fmt\"
   \"io\"
   \"log\"
@@ -30,7 +31,16 @@ func main() {
 }
 
 func doSomething(input io.Reader) int {
-  return 123
+	scanner := bufio.NewScanner(input)
+	scanner.Split(bufio.ScanLines)
+
+	s := 0
+
+	for scanner.Scan() {
+		// line := scanner.Text()
+  }
+
+  return s
 }
 " > "main.go"
 
@@ -56,6 +66,7 @@ go mod init dougal/advent_of_code_golang/2023/part_b
 echo "package main
 
 import (
+  \"bufio\"
   \"fmt\"
   \"io\"
   \"log\"
@@ -72,7 +83,16 @@ func main() {
 }
 
 func doSomething(input io.Reader) int {
-  return 123
+	scanner := bufio.NewScanner(input)
+	scanner.Split(bufio.ScanLines)
+
+	s := 0
+
+	for scanner.Scan() {
+		// line := scanner.Text()
+  }
+
+  return s
 }
 " > "main.go"
 
