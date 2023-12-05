@@ -65,6 +65,14 @@ type rng struct {
 	length      int
 }
 
+func newRng(destStart int, sourceStart int, length int) rng {
+	return rng{
+		destStart: destStart,
+		sourceStart: sourceStart,
+		length: length,
+	}
+}
+
 func (r rng) mapNumber(n int) (int, error) {
 	if n >= r.sourceStart && n < r.sourceStart+r.length {
 		return n - r.sourceStart + r.destStart, nil
@@ -118,7 +126,7 @@ func parse(input io.Reader) ([]int, []mapping) {
 				log.Fatal(err)
 			}
 
-			m.ranges = append(m.ranges, rng{destStart: ds, sourceStart: ss, length: lth})
+			m.ranges = append(m.ranges, newRng(ds, ss, lth))
 		}
 
 		mappings = append(mappings, m)
