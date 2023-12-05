@@ -1,7 +1,6 @@
 package main
 
 import (
-	"slices"
 	"strings"
 	"testing"
 )
@@ -45,37 +44,6 @@ func TestLowestLocation(t *testing.T) {
 	expected := 46
 
 	if result != expected {
-		t.Fatalf("Expected seeds to be %d but was %d", expected, result)
-	}
-}
-
-func Test(t *testing.T) {
-	seeds, mappings := parse(strings.NewReader(input))
-
-	expSeeds := []int{79, 14, 55, 13}
-
-	if !slices.Equal(seeds, expSeeds) {
-		t.Fatalf("Expected seeds to be %v but was %v", expSeeds, seeds)
-	}
-
-	if len(mappings) != 7 {
-		t.Fatalf("Expected mappings length to be 7 but was %d", len(mappings))
-	}
-
-	m := mappings[5]
-	expName := "temperature-to-humidity"
-	expRangeOne := rng{destStart: 0, sourceStart: 69, length: 1}
-	expRangeTwo := rng{destStart: 1, sourceStart: 0, length: 69}
-
-	if expName != m.name {
-		t.Fatalf("Expected name to be %s but was %s", expName, m.name)
-	}
-
-	if expRangeOne != m.ranges[0] {
-		t.Fatalf("Expected range to be %v but was %v", expRangeOne, m.ranges[0])
-	}
-
-	if expRangeTwo != m.ranges[1] {
-		t.Fatalf("Expected range to be %v but was %v", expRangeTwo, m.ranges[1])
+		t.Fatalf("Expected location to be %d but was %d", expected, result)
 	}
 }
