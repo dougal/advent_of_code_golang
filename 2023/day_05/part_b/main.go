@@ -34,7 +34,7 @@ func lowestLocation(input io.Reader) int {
 				number := seed
 
 				for _, mapping := range mappings {
-					number = mapping.mapNumber(number)
+					number = mapping.transformNumber(number)
 				}
 
 				if number < lowestLocation {
@@ -62,9 +62,9 @@ type mapping struct {
 	ranges []rng
 }
 
-func (m mapping) mapNumber(n int) int {
+func (m mapping) transformNumber(n int) int {
 	for _, r := range m.ranges {
-		newNumber, err := r.mapNumber(n)
+		newNumber, err := r.transformNumber(n)
 		if err == nil {
 			return newNumber
 		}
@@ -87,7 +87,7 @@ func newRng(destStart int, sourceStart int, length int) rng {
 	}
 }
 
-func (r rng) mapNumber(n int) (int, error) {
+func (r rng) transformNumber(n int) (int, error) {
 	if n >= r.sourceStart && n < r.sourceStart+r.length {
 		return n - r.sourceStart + r.destStart, nil
 	}
