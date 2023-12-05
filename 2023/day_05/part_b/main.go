@@ -22,21 +22,35 @@ func main() {
 
 func lowestLocation(input io.Reader) int {
 	seedLimits, mappings := parse(input)
-	lowestLocation := math.MaxInt
+	numSeedRanges := len(seedLimits) / 2
+	lowestLocations := make(chan int, numSeedRanges)
 
 	// For each pair of seed limits
 	// Calculate mapped number through each mapping until get to the final one
 	for i := 0; i < len(seedLimits); i += 2 {
-		for seed := seedLimits[i]; seed < seedLimits[i]+seedLimits[i+1]; seed++ {
-			number := seed
+		go func(i int) {
+			lowestLocation := math.MaxInt
+			for seed := seedLimits[i]; seed < seedLimits[i]+seedLimits[i+1]; seed++ {
+				number := seed
 
-			for _, mapping := range mappings {
-				number = mapping.mapNumber(number)
+				for _, mapping := range mappings {
+					number = mapping.mapNumber(number)
+				}
+
+				if number < lowestLocation {
+					lowestLocation = number
+				}
 			}
 
-			if number < lowestLocation {
-				lowestLocation = number
-			}
+			lowestLocations <- lowestLocation
+		}(i)
+	}
+
+	lowestLocation := math.MaxInt
+	for i:= 0; i < numSeedRanges; i++ {
+		l := <- lowestLocations
+		if l < lowestLocation {
+			lowestLocation = l
 		}
 	}
 
