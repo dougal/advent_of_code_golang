@@ -32,18 +32,21 @@ AAAAA 61
 2JJJJ 53
 JJJJ2 41`
 
-var rankCases = []struct{cards string; expected string}{
-	{ "AAAAA", "7mmmmm" },
-	{ "AAAAK", "6mmmml" },
-	{ "AAAKK", "5mmmll" },
-	{ "AAAQK", "4mmmkl" },
-	{ "AAKKQ", "3mmllk" },
-	{ "AAKQJ", "2mmlkj" },
-	{ "AKQJT", "1mlkji" },
+var rankCases = []struct {
+	cards    string
+	expected string
+}{
+	{"AAAAA", "7mmmmm"},
+	{"AAAAK", "6mmmml"},
+	{"AAAKK", "5mmmll"},
+	{"AAAQK", "4mmmkl"},
+	{"AAKKQ", "3mmllk"},
+	{"AAKQJ", "2mmlkj"},
+	{"AKQJT", "1mlkji"},
 
 	// Bonus tests based on failures
-	{ "T55J5", "4iddjd" },
-	{ "T3Q33", "4ibkbb" },
+	{"T55J5", "4iddjd"},
+	{"T3Q33", "4ibkbb"},
 }
 
 func TestHandsScore(t *testing.T) {
@@ -67,7 +70,7 @@ func TestMoreHandsScore(t *testing.T) {
 func TestRankingScore(t *testing.T) {
 	for _, c := range rankCases {
 		h := NewHand(c.cards + " 123")
-    act := h.RankingScore()
+		act := h.RankingScore()
 
 		if act != c.expected {
 			t.Errorf("Expected %s but got %s\n", c.expected, act)
