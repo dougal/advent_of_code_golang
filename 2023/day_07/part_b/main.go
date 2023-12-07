@@ -25,16 +25,16 @@ var cardRank = map[string]string{
 	"A": "m",
 	"K": "l",
 	"Q": "k",
-	"J": "j",
-	"T": "i",
-	"9": "h",
-	"8": "g",
-	"7": "f",
-	"6": "e",
-	"5": "d",
-	"4": "c",
-	"3": "b",
-	"2": "a",
+	"T": "j",
+	"9": "i",
+	"8": "h",
+	"7": "g",
+	"6": "f",
+	"5": "e",
+	"4": "d",
+	"3": "c",
+	"2": "b",
+	"J": "a",
 }
 
 type Hand struct {
@@ -78,16 +78,29 @@ func (h Hand) RankingScore() string {
 		perms[c]++
 	}
 
-	// slices.Sort(rankHand)
-	// slices.Reverse(rankHand)
+	jCount, ok := perms["J"]
+	if !ok {
+		jCount = 0
+	}
 
 	var counts []int
-	for _, v := range perms {
+	for k, v := range perms {
+    if k == "J" {
+			continue
+		}
 		counts = append(counts, v)
 	}
 
 	slices.Sort(counts)
 	slices.Reverse(counts)
+
+	// Cover case where only Jokers
+	if len(counts) == 0 {
+		counts = append(counts, 5)
+	} else {
+		// Add the count of Jokers to the highest ranking group.
+		counts[0] += jCount
+	}
 
 	// Default is High Card
 	typeScore := 1

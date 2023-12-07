@@ -41,16 +41,16 @@ var rankCases = []struct {
 	{"AAAKK", "5mmmll"},
 	{"AAAQK", "4mmmkl"},
 	{"AAKKQ", "3mmllk"},
-	{"AAKQJ", "2mmlkj"},
-	{"AKQJT", "1mlkji"},
+	{"AAKQJ", "4mmlka"},
+	{"AKQJT", "2mlkaj"},
 
 	// Bonus tests based on failures
-	{"T55J5", "4iddjd"},
-	{"T3Q33", "4ibkbb"},
+	{"T55J5", "6jeeae"},
+	{"T3Q33", "4jckcc"},
 }
 
 func TestHandsScore(t *testing.T) {
-	exp := 6440
+	exp := 5905
 	actual := AllHandsScore(strings.NewReader(testInput))
 
 	if exp != actual {
@@ -59,7 +59,7 @@ func TestHandsScore(t *testing.T) {
 }
 
 func TestMoreHandsScore(t *testing.T) {
-	expMore := 6592
+	expMore := 6839
 	actualMore := AllHandsScore(strings.NewReader(moreTestInput))
 
 	if expMore != actualMore {
