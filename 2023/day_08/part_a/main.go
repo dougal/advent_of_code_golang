@@ -71,5 +71,5 @@ func parseSteps(line string) []int {
 		}
 	}
 
-  return steps
+	return steps
 }

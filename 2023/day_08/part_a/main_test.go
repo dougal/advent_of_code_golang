@@ -5,7 +5,10 @@ import (
 	"testing"
 )
 
-var cases = []struct{input string; expected int}{
+var cases = []struct {
+	input    string
+	expected int
+}{
 	{`RL
 
 AAA = (BBB, CCC)
@@ -15,7 +18,7 @@ DDD = (DDD, DDD)
 EEE = (EEE, EEE)
 GGG = (GGG, GGG)
 ZZZ = (ZZZ, ZZZ)`, 2},
-  {`LLR
+	{`LLR
 
 AAA = (BBB, BBB)
 BBB = (AAA, ZZZ)
