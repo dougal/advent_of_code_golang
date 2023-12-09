@@ -37,7 +37,7 @@ func extrapolate(line string) int {
 	var rows [][]int
 	rows = append(rows, []int{})
 
-	for _, s := range strings.Split(line, " ") {
+	for _, s := range strings.Fields(line) {
 		n, err := strconv.Atoi(s)
 		if err != nil {
 			log.Fatal(err)
@@ -55,7 +55,7 @@ func extrapolate(line string) int {
 
 	firstNum := 0
 	for _, r := range rows[1:] {
-		firstNum = r[0] - firstNum
+		firstNum = r[0] + firstNum
 	}
 
 	return firstNum
