@@ -28,7 +28,7 @@ func TestSumAll(t *testing.T) {
 	for _, c := range sumCases {
 		actual := sumAll(strings.NewReader(c.input))
 		if actual != c.expected {
-			fmt.Sprintf("expected %d but got %d", c.expected, actual)
+			fmt.Errorf("expected %d but got %d", c.expected, actual)
 		}
 	}
 }
@@ -37,7 +37,7 @@ func TestExtrapolate(t *testing.T) {
 	for _, c := range extrapolateCases {
 		actual := extrapolate(c.input)
 		if actual != c.expected {
-			fmt.Sprintf("expected %d but got %d", c.expected, actual)
+			fmt.Errorf("expected %d but got %d", c.expected, actual)
 		}
 	}
 }
