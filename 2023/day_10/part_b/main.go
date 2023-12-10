@@ -30,7 +30,6 @@ func countEnclosedTiles(input io.Reader) int {
 
 	m.markLoopTiles()
 	m.markOutside()
-	// m.markInside() // Makes debugging easier
 	fmt.Println(m.Print())
 	return m.countInsideTiles()
 }
