@@ -49,10 +49,10 @@ const inside Form = 'I'
 const outside Form = 'O'
 
 type Pipe struct {
-	isStart   bool
-	isLoop    bool
+	isStart bool
+	isLoop  bool
 	// isOutside bool
-	form      Form
+	form Form
 }
 
 type Map [][]Pipe
@@ -174,34 +174,34 @@ func (m *Map) nextValidMove(x, y int) (int, int) {
 }
 
 func (m *Map) markOutside() {
-	for y, r := range (*m) {
+	for y, r := range *m {
 		tubeCount := 0
 		var previousForm Form
 		for x, tile := range r {
 			// Only modify inside/outside if part of loop
 			// Ignore horizontal pipes as they do not affect inside/outside
-      if tile.isLoop && tile.form != hPipe {
+			if tile.isLoop && tile.form != hPipe {
 				// TODO Replace the start letter with it's actual type
-        tubeCount++
+				tubeCount++
 				// j+f and 7+l cancel each other out, so don't alter the tube count.
-        if ((tile.form == jPipe && previousForm == fPipe) || (tile.form == sevenPipe && previousForm == lPipe)) {
-          tubeCount--
-        }
+				if (tile.form == jPipe && previousForm == fPipe) || (tile.form == sevenPipe && previousForm == lPipe) {
+					tubeCount--
+				}
 
-        previousForm = tile.form
-      }
+				previousForm = tile.form
+			}
 
 			if tile.isLoop {
 				continue
 			}
 
-      if tubeCount % 2 == 1 {
+			if tubeCount%2 == 1 {
 				(*m)[y][x].form = inside
 			} else {
 				(*m)[y][x].form = outside
-      }
-    }
-  }
+			}
+		}
+	}
 }
 
 // func (m *Map) markOutside() {
