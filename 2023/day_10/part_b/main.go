@@ -200,90 +200,6 @@ func (m *Map) markOutside() {
 	}
 }
 
-// func (m *Map) markOutside() {
-// 	// Top row
-// 	for x := range (*m)[0] {
-// 		m.markTileOutside(x, 0)
-// 	}
-
-// 	// Bottom row
-// 	for x := range (*m)[m.height()-1] {
-// 		m.markTileOutside(x, m.height()-1)
-// 	}
-
-// 	// Left column
-// 	for y := range *m {
-// 		m.markTileOutside(0, y)
-// 	}
-
-// 	// Right column
-// 	for y := range *m {
-// 		m.markTileOutside(m.width()-1, y)
-// 	}
-
-// 	m.markOutsideOfCorners()
-// }
-
-// var outsideCorners = map[Form][]Move{
-// 	lPipe:     {Down, Left},
-// 	jPipe:     {Down, Right},
-// 	sevenPipe: {Up, Right},
-// 	fPipe:     {Up, Left},
-// }
-
-// func (m *Map) markOutsideOfCorners() {
-// 	// Loop through every tile
-// 	for y, r := range *m {
-// 		for x, t := range r {
-// 			// If a corner tile
-// 			if moves, ok := outsideCorners[t.form]; ok {
-// 				// Loop through the tiles on the outside
-// 				for _, move := range moves {
-// 					nextX := x + move.x
-// 					nextY := y + move.y
-
-// 					// Outside of map bounds
-// 					if nextX < 0 || nextY < 0 || nextX >= m.width() || nextY >= m.height() {
-// 						continue
-// 					}
-
-// 					m.markTileOutside(nextX, nextY)
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-
-// func (m *Map) markTileOutside(x, y int) {
-// 	tile := (*m)[y][x]
-
-// 	if tile.isLoop {
-// 		return
-// 	}
-
-// 	if tile.isOutside {
-// 		return
-// 	}
-
-// 	// Mark the tile as outside
-// 	tile.isOutside = true
-// 	tile.form = outside
-// 	(*m)[y][x] = tile
-
-// 	// Search all it's neighbours
-// 	for _, move := range AllMoves {
-// 		nextX := x + move.x
-// 		nextY := y + move.y
-
-// 		// Outside of map bounds
-// 		if nextX < 0 || nextY < 0 || nextX >= m.width() || nextY >= m.height() {
-// 			continue
-// 		}
-
-// 		m.markTileOutside(nextX, nextY)
-// 	}
-// }
-
 func (m Map) countInsideTiles() int {
 	var c int
 
@@ -297,16 +213,6 @@ func (m Map) countInsideTiles() int {
 
 	return c
 }
-
-// func (m *Map) markInside() {
-// 	for y, r := range *m {
-// 		for x, t := range r {
-// 			if t.form != inside && !t.isLoop {
-// 				(*m)[y][x].form = inside
-// 			}
-// 		}
-// 	}
-// }
 
 func (m Map) Print() string {
 	var s string
