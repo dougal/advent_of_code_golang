@@ -15,10 +15,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(doSomething(f))
+	fmt.Println(maxDistance(f))
 }
 
-func doSomething(input io.Reader) int {
+func maxDistance(input io.Reader) int {
 	scanner := bufio.NewScanner(input)
 	scanner.Split(bufio.ScanLines)
 

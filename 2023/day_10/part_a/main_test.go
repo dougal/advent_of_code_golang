@@ -21,9 +21,9 @@ SJ.L7
 LJ...`, 8},
 }
 
-func TestSomething(t *testing.T) {
+func TestMaxDistance(t *testing.T) {
 	for _, c := range cases {
-		actual := doSomething(strings.NewReader(c.input))
+		actual := maxDistance(strings.NewReader(c.input))
 		if actual != c.expected {
 			t.Errorf("Expected %d but got %d\n", c.expected, actual)
 		}
