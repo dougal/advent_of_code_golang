@@ -108,16 +108,12 @@ type Move struct {
 	y int
 }
 
-var UpLeft = Move{-1, -1}
 var Up = Move{0, -1}
-var UpRight = Move{1, -1}
 var Left = Move{-1, 0}
 var Right = Move{1, 0}
-var DownLeft = Move{-1, 1}
 var Down = Move{0, 1}
-var DownRight = Move{1, 1}
 
-var AllMoves = []Move{UpLeft, Up, UpRight, Left, Right, DownLeft, Down, DownRight}
+var AllMoves = []Move{Up, Left, Right, Down}
 
 var validMoves = map[Form][]Move{
 	startPipe: {Up, Down, Left, Right},
