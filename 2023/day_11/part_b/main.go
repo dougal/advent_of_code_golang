@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"math"
 	"os"
 )
 
@@ -135,16 +134,24 @@ func (s *Space) SumDistances(emptyRows, emptyCols []int) int {
 		}
 	}
 
-	var sum float64
+	var sum int
 
 	for i, c := range coords {
 		if i == len(coords)-1 {
 			break
 		}
 		for _, c2 := range coords[i+1:] {
-			sum += math.Abs(float64(c[0]-c2[0])) + math.Abs(float64(c[1]-c2[1]))
+			sum += Abs(c[0]-c2[0]) + Abs(c[1]-c2[1])
 		}
 	}
 
-	return int(sum)
+	return sum
+}
+
+func Abs(i int) int {
+	if i < 0 {
+		return i * -1
+	}
+
+	return i
 }
