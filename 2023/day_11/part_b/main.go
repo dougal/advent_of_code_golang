@@ -85,8 +85,7 @@ func (s *Space) CalculateEmptyRows() []int {
 			}
 		}
 		if empty {
-			// Prepend so as to not have to adjust all the indexes when inserting.
-			emptyRows = append([]int{x}, emptyRows...)
+			emptyRows = append(emptyRows, x)
 		}
 	}
 
@@ -104,8 +103,7 @@ func (s *Space) CalculateEmptyCols() []int {
 		}
 
 		if empty {
-			// Prepend so as to not have to adjust all the indexes when inserting.
-			emptyCols = append([]int{i}, emptyCols...)
+			emptyCols = append(emptyCols, i)
 		}
 	}
 
