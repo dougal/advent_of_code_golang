@@ -7,7 +7,6 @@ import (
 	"log"
 	"math"
 	"os"
-	"slices"
 )
 
 func main() {
@@ -37,12 +36,10 @@ func sumGalaxyDistances(input io.Reader) int {
 
 	// fmt.Println(space.Print())
 
-	space.ExpandEmptyRows()
-	space.ExpandEmptyCols()
+	emptyRows := space.CalculateEmptyRows()
+	emptyCols := space.CalculateEmptyCols()
 
-	// fmt.Println(space.Print())
-
-	return space.SumDistances()
+	return space.SumDistances(emptyRows, emptyCols)
 }
 
 func (s Space) Print() string {
@@ -76,7 +73,7 @@ func (s *Space) AddRow(line string) {
 	*s = append(*s, o)
 }
 
-func (s *Space) ExpandEmptyRows() {
+func (s *Space) CalculateEmptyRows() []int {
 	var emptyRows []int
 
 	for x, row := range *s {
@@ -93,13 +90,10 @@ func (s *Space) ExpandEmptyRows() {
 		}
 	}
 
-	// Duplicate each empty row
-	for _, i := range emptyRows {
-		*s = slices.Insert(*s, i, (*s)[i])
-	}
+	return emptyRows
 }
 
-func (s *Space) ExpandEmptyCols() {
+func (s *Space) CalculateEmptyCols() []int {
 	var emptyCols []int
 	for i := range (*s)[0] {
 		empty := true
@@ -115,21 +109,30 @@ func (s *Space) ExpandEmptyCols() {
 		}
 	}
 
-	// Duplicate each empty column
-	for _, i := range emptyCols {
-		for x, row := range *s {
-			(*s)[x] = slices.Insert(row, i, Empty)
-		}
-	}
+	return emptyCols
 }
 
-func (s *Space) SumDistances() int {
+func (s *Space) SumDistances(emptyRows, emptyCols []int) int {
 	var coords [][]int
 
 	for x, row := range *s {
 		for y, g := range row {
 			if g == Galaxy {
-				coords = append(coords, []int{x, y})
+				var extraRows int
+				for _, er := range emptyRows {
+					if er < x {
+						extraRows++
+					}
+				}
+
+				var extraCols int
+				for _, ec := range emptyCols {
+					if ec < y {
+						extraCols++
+					}
+				}
+
+				coords = append(coords, []int{x+extraRows, y+extraCols})
 			}
 		}
 	}
