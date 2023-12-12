@@ -43,10 +43,7 @@ func arrangements(s string) int {
 	permutations := maxPermutation(line.unknownCount, line.brokenCount)
 	fmt.Println(permutations)
 	for i := 0; i < permutations; i++ {
-		var arrangement []string
-		for k := 0; k < line.unknownCount; k++ {
-			arrangement = append(arrangement, ".")
-		}
+		arrangement := make([]string, line.unknownCount)
 
 		var (
 			n = i
