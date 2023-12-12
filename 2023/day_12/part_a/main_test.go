@@ -31,3 +31,11 @@ func TestSumArrangements(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkSumArrangements(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		for _, c := range cases {
+			sumArrangements(strings.NewReader(c.input))
+		}
+	}
+}
