@@ -32,44 +32,44 @@ func TestSumArrangements(t *testing.T) {
 	}
 }
 
-var validPrefixCases = []struct{
-	input string
-	groupings []int
-	expected bool
-}{
-	{"?", []int{ 1 }, true},
-	{"#", []int{ 1 }, true},
-	{".", []int{ 1 }, false},
-	{"?.", []int{ 1 }, true},
-	{"#.", []int{ 1 }, true},
-	{"..", []int{ 1 }, false},
+// var validPrefixCases = []struct{
+// 	input string
+// 	groupings []int
+// 	expected bool
+// }{
+// 	{"?", []int{ 1 }, true},
+// 	{"#", []int{ 1 }, true},
+// 	{".", []int{ 1 }, false},
+// 	{"?.", []int{ 1 }, true},
+// 	{"#.", []int{ 1 }, true},
+// 	{"..", []int{ 1 }, false},
 
-	{"???.###", []int{1,1,3}, true},
+// 	{"???.###", []int{1,1,3}, true},
 
-	{"#??.###", []int{1,1,3}, true},
-	{"#.?.###", []int{1,1,3}, true},
-	{"#.#.###", []int{1,1,3}, true},
-	{"#...###", []int{1,1,3}, false},
-	{"##?.###", []int{1,1,3}, false},
+// 	{"#??.###", []int{1,1,3}, true},
+// 	{"#.?.###", []int{1,1,3}, true},
+// 	{"#.#.###", []int{1,1,3}, true},
+// 	{"#...###", []int{1,1,3}, false},
+// 	{"##?.###", []int{1,1,3}, false},
 
-	{".??.###", []int{1,1,3}, true},
-	{".#?.###", []int{1,1,3}, true},
-	{".##.###", []int{1,1,3}, false},
-	{".#..###", []int{1,1,3}, false},
-	{"..?.###", []int{1,1,3}, true},
-	{"..#.###", []int{1,1,3}, false},
-	{"....###", []int{1,1,3}, false},
-}
+// 	{".??.###", []int{1,1,3}, true},
+// 	{".#?.###", []int{1,1,3}, true},
+// 	{".##.###", []int{1,1,3}, false},
+// 	{".#..###", []int{1,1,3}, false},
+// 	{"..?.###", []int{1,1,3}, true},
+// 	{"..#.###", []int{1,1,3}, false},
+// 	{"....###", []int{1,1,3}, false},
+// }
 
-func TestPrefixSatisifies(t *testing.T) {
-	for i, c := range validPrefixCases {
-		l := Line{c.input, c.groupings}
-		actual := l.validPrefix()
-		if actual != c.expected {
-			t.Errorf("Expected case %d to be %t but got %t\n", i, c.expected, actual)
-		}
-	}
-}
+// func TestPrefixSatisifies(t *testing.T) {
+// 	for i, c := range validPrefixCases {
+// 		l := Line{c.input, c.groupings}
+// 		actual := l.validPrefix()
+// 		if actual != c.expected {
+// 			t.Errorf("Expected case %d to be %t but got %t\n", i, c.expected, actual)
+// 		}
+// 	}
+// }
 
 
 func BenchmarkSumArrangements(b *testing.B) {
