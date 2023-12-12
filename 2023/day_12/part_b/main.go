@@ -71,8 +71,6 @@ func replaceNextUnknown(l Line, r string) int {
 type Line struct {
 	cells    string
 	grouping []int
-	brokenCount int
-	workingCount int
 }
 
 func NewLine(s string) Line {
@@ -91,11 +89,8 @@ func NewLine(s string) Line {
 		for _, g := range strings.Split(gs, ",") {
 			gi, _ := strconv.Atoi(g)
 			l.grouping = append(l.grouping, gi)
-			l.brokenCount+= gi
 		}
 	}
-
-	l.workingCount = len(l.cells) - l.brokenCount
 
 	return l
 }
