@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -27,39 +26,60 @@ func sumArrangements(input io.Reader) int {
 	c := 0
 
 	for scanner.Scan() {
-		c += arrangements(scanner.Text())
+		l := NewLine(scanner.Text())
+		c += arrangements(l)
 	}
 
 	return c
 }
 
-func arrangements(s string) int {
-	var c int
-	line := NewLine(s)
-
-	c += replaceNextUnknown(line, "#")
-	c += replaceNextUnknown(line, ".")
-
-	return c
-}
-
-func replaceNextUnknown(l Line, r string) int {
-	before, after, _ := strings.Cut(l.cells, "?")
-
-	l.cells = before + r + after
-
-	if strings.Index(l.cells, "?") == -1 {
-		if l.validPrefix() {
+func arrangements(l Line) int {
+	// Finished, no more to check.
+	// Return 1 if all groups accounted for.
+	if l.cells == "" {
+		if len(l.grouping) == 0 {
 			return 1
 		} else {
 			return 0
 		}
 	}
 
-	var c int
-	if l.validPrefix() {
-		c += replaceNextUnknown(l, "#")
-		c += replaceNextUnknown(l, ".")
+	// There are no more groups remaining
+	// Return 1 if all wells accounted for.
+	if len(l.grouping) == 0 {
+		if strings.Index(l.cells, "#") == -1 {
+			return 1
+		} else {
+			return 0
+		}
+	}
+
+	c := 0
+
+	if l.cells[0] == '.' || l.cells[0] == '?' {
+		lNext := l
+		lNext.cells = lNext.cells[1:]
+		c += arrangements(lNext)
+	}
+
+	if l.cells[0] == '#' || l.cells[0] == '?' {
+		// Valid if:
+		// - Enough wells left to complete
+		// - First chars equaling first group must be wells
+		// - Next spring after must be operational, or be out of bounds.
+		if l.grouping[0] <= len(l.cells) &&
+			strings.Index(l.cells[:l.grouping[0]], ".") == -1 &&
+			(l.grouping[0] == len(l.cells) || l.cells[l.grouping[0]] != '#') {
+			lNext := l
+			// Pass empty string if first group is same length as remaining cells
+			if l.grouping[0] == len(l.cells) {
+				lNext.cells = ""
+			} else {
+				lNext.cells = lNext.cells[l.grouping[0] + 1:]
+			}
+			lNext.grouping = lNext.grouping[1:]
+			c += arrangements(lNext)
+		}
 	}
 
 	return c
@@ -82,56 +102,4 @@ func NewLine(s string) Line {
 	}
 
 	return l
-}
-
-// Returns false if no extend prefix can satisfy the groupings.
-// Returns true if:
-// - There are no groupings in the prefix
-// - Any groupings in the prefix partially satisfy the groupings
-// TODO: Forward-checking there are enough ? left to insert enough # or . to satisfy.
-func (l Line) validPrefix() bool {
-	prefix, _, _ := strings.Cut(l.cells, "?")
-
-	var groups []int
-	var curGroup int
-	for _, c := range prefix {
-		if c == '.' {
-			if curGroup > 0 {
-				groups = append(groups, curGroup)
-				curGroup = 0
-			}
-		} else if c == '#' {
-			curGroup++
-		}
-	}
-
-	if curGroup > 0 {
-		groups = append(groups, curGroup)
-		curGroup = 0
-	}
-
-	// Too many groups
-	if len(groups) > len(l.grouping) {
-		return false
-	}
-
-	for i, g := range groups {
-		isLast := i == len(groups)-1
-
-		if isLast {
-			if g > l.grouping[i] {
-				return false
-			}
-		} else {
-			if g != l.grouping[i] {
-				return false
-			}
-		}
-	}
-
-	if strings.Index(l.cells, "?") == -1 {
-		return slices.Equal(groups, l.grouping)
-	}
-
-	return true
 }

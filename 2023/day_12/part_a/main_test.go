@@ -34,45 +34,6 @@ func TestSumArrangements(t *testing.T) {
 	}
 }
 
-var validPrefixCases = []struct{
-	input string
-	expected bool
-}{
-	{"? 1", true},
-	{"# 1", true},
-	{". 1", false},
-	{"?. 1", true},
-	{"#. 1", true},
-	{".. 1", false},
-
-	{"???.### 1,1,3", true},
-
-	{"#??.### 1,1,3", true},
-	{"#.?.### 1,1,3", true},
-	{"#.#.### 1,1,3", true},
-	{"#...### 1,1,3", false},
-	{"##?.### 1,1,3", false},
-
-	{".??.### 1,1,3", true},
-	{".#?.### 1,1,3", true},
-	{".##.### 1,1,3", false},
-	{".#..### 1,1,3", false},
-	{"..?.### 1,1,3", true},
-	{"..#.### 1,1,3", false},
-	{"....### 1,1,3", false},
-}
-
-func TestPrefixSatisifies(t *testing.T) {
-	for _, c := range validPrefixCases {
-		l := NewLine(c.input)
-		actual := l.validPrefix()
-		if actual != c.expected {
-			t.Errorf("Expected %t but got %t\n", c.expected, actual)
-		}
-	}
-}
-
-
 func BenchmarkSumArrangements(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for _, c := range cases {
