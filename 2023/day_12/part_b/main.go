@@ -42,12 +42,14 @@ func arrangements(s string) int {
 	// permutations := int(math.Pow(float64(2), float64(line.unknownCount)))
 	permutations := maxPermutation(line.unknownCount, line.brokenCount)
 	fmt.Println(permutations)
+Outer:
 	for i := 0; i < permutations; i++ {
 		arrangement := make([]string, line.unknownCount)
 
 		var (
-			n = i
-			j int
+			n           = i
+			j           int
+			brokenAdded int
 		)
 
 		for n > 0 {
@@ -55,6 +57,11 @@ func arrangements(s string) int {
 				arrangement[j] = "."
 			} else {
 				arrangement[j] = "#"
+				brokenAdded++
+				// fmt.Printf("%d > %d\n", brokenAdded, line.unknownBrokenCount)
+				if brokenAdded > line.unknownBrokenCount {
+					continue Outer
+				}
 			}
 
 			n = n / 2
@@ -71,11 +78,12 @@ func arrangements(s string) int {
 }
 
 type Line struct {
-	cells            []string
-	grouping         []int
-	unknownCount     int
-	brokenCount      int
-	knownBrokenCount int
+	cells              []string
+	grouping           []int
+	unknownCount       int
+	brokenCount        int
+	knownBrokenCount   int
+	unknownBrokenCount int
 }
 
 func NewLine(s string) Line {
@@ -83,7 +91,7 @@ func NewLine(s string) Line {
 	sc, gs, _ := strings.Cut(s, " ")
 
 	cellGroup := strings.Split(sc, "")
-	for i := 0; i <= 5; i++ {
+	for i := 0; i < 5; i++ {
 		l.cells = append(l.cells, cellGroup...)
 		l.cells = append(l.cells, "?")
 	}
@@ -93,7 +101,7 @@ func NewLine(s string) Line {
 		gi, _ := strconv.Atoi(g)
 		gg = append(gg, gi)
 	}
-	for i := 0; i <= 5; i++ {
+	for i := 0; i < 5; i++ {
 		l.grouping = append(l.grouping, gg...)
 	}
 
@@ -109,8 +117,13 @@ func NewLine(s string) Line {
 		}
 	}
 
+	l.unknownBrokenCount = l.brokenCount - l.knownBrokenCount
+
 	// fmt.Println(l.cells)
 	// fmt.Println(l.grouping)
+	// fmt.Println(l.brokenCount)
+	// fmt.Println(l.knownBrokenCount)
+	// fmt.Println(l.unknownBrokenCount)
 
 	return l
 }
@@ -123,10 +136,6 @@ func (l Line) satisfiedBy(arrangement []string) bool {
 		if c == "#" {
 			brokenCount++
 		}
-	}
-
-	if brokenCount != l.brokenCount-l.knownBrokenCount {
-		return false
 	}
 
 	var missingIndex int
@@ -165,11 +174,11 @@ func maxPermutation(unknownCount, brokenCount int) int {
 	// If 6 unknown, and 3 broken:
 	// ...###
 
-  var s int
+	var s int
 
 	m := 1
-	for i:=0; i < unknownCount; i++ {
-		if i < unknownCount - brokenCount {
+	for i := 0; i < unknownCount; i++ {
+		if i < unknownCount-brokenCount {
 			continue
 		}
 
@@ -177,5 +186,5 @@ func maxPermutation(unknownCount, brokenCount int) int {
 		m *= 2
 	}
 
-  return s
+	return s
 }
