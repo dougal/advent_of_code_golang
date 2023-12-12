@@ -56,7 +56,8 @@ func arrangements(l Line) int {
 		}
 	}
 
-	if v, ok := arrangementsCache[l.cacheKey()]; ok {
+	k := l.cacheKey()
+	if v, ok := arrangementsCache[k]; ok {
 		return v
 	}
 
@@ -88,7 +89,7 @@ func arrangements(l Line) int {
 		}
 	}
 
-	arrangementsCache[l.cacheKey()] = c
+	arrangementsCache[k] = c
 	return c
 }
 
