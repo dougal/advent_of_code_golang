@@ -107,12 +107,12 @@ func NewLine(s string) Line {
 // TODO: Forward-checking there are enough ? left to insert enough # or . to satisfy.
 func (l Line) validPrefix() bool {
 	prefix, _, _ := strings.Cut(l.cells, "?")
-	var groups []int
+	var foundGroups []int
 	var curGroup int
 	for _, c := range prefix {
 		if c == '.' {
 			if curGroup > 0 {
-				groups = append(groups, curGroup)
+				foundGroups = append(foundGroups, curGroup)
 				curGroup = 0
 			}
 		} else if c == '#' {
@@ -121,17 +121,17 @@ func (l Line) validPrefix() bool {
 	}
 
 	if curGroup > 0 {
-		groups = append(groups, curGroup)
+		foundGroups = append(foundGroups, curGroup)
 		curGroup = 0
 	}
 
 	// Too many groups
-	if len(groups) > len(l.grouping) {
+	if len(foundGroups) > len(l.grouping) {
 		return false
 	}
 
-	for i, g := range groups {
-		isLast := i == len(groups)-1
+	for i, g := range foundGroups {
+		isLast := i == len(foundGroups)-1
 
 		if isLast {
 			if g > l.grouping[i] {
@@ -145,7 +145,7 @@ func (l Line) validPrefix() bool {
 	}
 
 	if strings.Index(l.cells, "?") == -1 {
-		return slices.Equal(groups, l.grouping)
+		return slices.Equal(foundGroups, l.grouping)
 	}
 
 	return true
