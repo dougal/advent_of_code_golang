@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"math"
 	"os"
 	"slices"
 	"strconv"
@@ -38,90 +37,101 @@ func arrangements(s string) int {
 	var c int
 	line := NewLine(s)
 
-	permutations := int(math.Pow(float64(2), float64(line.unknownCount)))
-	for i := 0; i < permutations; i++ {
-		var arrangement []string
-		for k := 0; k < line.unknownCount; k++ {
-			arrangement = append(arrangement, ".")
-		}
+	c += replaceNextUnknown(line, "#")
+	c += replaceNextUnknown(line, ".")
 
-		var (
-			n = i
-			j int
-		)
-		
-		for n > 0 {
-			if n%2 == 0 {
-				arrangement[j] = "."
-			} else {
-				arrangement[j] = "#"
-			}
+	return c
+}
 
-			n = n / 2
-			j++
-		}
+func replaceNextUnknown(l Line, r string) int {
+	before, after, _ := strings.Cut(l.cells, "?")
 
-		if line.satisfiedBy(arrangement) {
-			c++
+	l.cells = before + r + after
+
+	if strings.Index(l.cells, "?") == -1 {
+		if l.validPrefix() {
+			return 1
+		} else {
+			return 0
 		}
+	}
+
+	var c int
+	if l.validPrefix() {
+		c += replaceNextUnknown(l, "#")
+		c += replaceNextUnknown(l, ".")
 	}
 
 	return c
 }
 
 type Line struct {
-	cells []string
+	cells    string
 	grouping []int
-	unknownCount int
 }
 
 func NewLine(s string) Line {
 	var l Line
 	sc, gs, _ := strings.Cut(s, " ")
 
-	l.cells = strings.Split(sc, "")
+	l.cells = sc
 
 	for _, g := range strings.Split(gs, ",") {
 		gi, _ := strconv.Atoi(g)
 		l.grouping = append(l.grouping, gi)
 	}
 
-	for _, c := range l.cells {
-		if c == "?" {
-			l.unknownCount++
-		}
-	}
-
 	return l
 }
 
-// return true if the arrangement, when applied, satisfies the grouping
-func (l Line) satisfiedBy(arrangement []string) bool {
-	var missingIndex int
-	var cells []string
+// Returns false if no extend prefix can satisfy the groupings.
+// Returns true if:
+// - There are no groupings in the prefix
+// - Any groupings in the prefix partially satisfy the groupings
+// TODO: Forward-checking there are enough ? left to insert enough # or . to satisfy.
+func (l Line) validPrefix() bool {
+	prefix, _, _ := strings.Cut(l.cells, "?")
 
-	for _, c := range l.cells {
-		if c != "?" {
-			cells = append(cells, c)
-			continue
+	var groups []int
+	var curGroup int
+	for _, c := range prefix {
+		if c == '.' {
+			if curGroup > 0 {
+				groups = append(groups, curGroup)
+				curGroup = 0
+			}
+		} else if c == '#' {
+			curGroup++
 		}
-
-		cells = append(cells, arrangement[missingIndex])
-		missingIndex++
 	}
 
-	s := strings.Join(cells, "")
-
-	gs := strings.Split(s, ".")
-
-	var grouping []int
-	for _, g := range gs {
-		if g == "" {
-			continue
-		}
-
-		grouping = append(grouping, len(g))
+	if curGroup > 0 {
+		groups = append(groups, curGroup)
+		curGroup = 0
 	}
 
-	return slices.Equal(grouping, l.grouping)
+	// Too many groups
+	if len(groups) > len(l.grouping) {
+		return false
+	}
+
+	for i, g := range groups {
+		isLast := i == len(groups)-1
+
+		if isLast {
+			if g > l.grouping[i] {
+				return false
+			}
+		} else {
+			if g != l.grouping[i] {
+				return false
+			}
+		}
+	}
+
+	if strings.Index(l.cells, "?") == -1 {
+		return slices.Equal(groups, l.grouping)
+	}
+
+	return true
 }
