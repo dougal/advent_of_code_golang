@@ -36,7 +36,7 @@ func sumReflections(input io.Reader) int {
 
 		// Only add the vertical value if it is changed by the smudge.
 		if origV != newV {
-			s += newH
+			s += newV
 		}
 	}
 
