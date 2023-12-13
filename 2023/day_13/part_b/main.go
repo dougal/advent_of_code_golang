@@ -23,11 +23,11 @@ func sumReflections(input io.Reader) int {
 	s := 0
 
 	for _, p := range puzzles {
-		origH:= checkReflectionHorizontal(p, false)
-		origV:= checkReflectionVertical(p, false)
+		origH:= horizontalIndexOfReflection(p, false)
+		origV:= verticalIndexOfReflection(p, false)
 
-		newH := checkReflectionHorizontal(p, true)
-		newV := checkReflectionVertical(p, true)
+		newH := horizontalIndexOfReflection(p, true)
+		newV := verticalIndexOfReflection(p, true)
 
 		// Only add the horizontal value if it is changed by the smudge.
 		if origH != newH {
@@ -43,7 +43,7 @@ func sumReflections(input io.Reader) int {
 	return s
 }
 
-func checkReflectionVertical(p [][]rune, errorCorrect bool) int {
+func verticalIndexOfReflection(p [][]rune, errorCorrect bool) int {
 	// Rotate
 	p2 := make([][]rune, len(p[0]))
 	// for range p[0] {
@@ -56,10 +56,10 @@ func checkReflectionVertical(p [][]rune, errorCorrect bool) int {
 		}
 	}
 
-	return checkReflectionHorizontal(p2, errorCorrect)
+	return horizontalIndexOfReflection(p2, errorCorrect)
 }
 
-func checkReflectionHorizontal(p [][]rune, errorCorrect bool) int {
+func horizontalIndexOfReflection(p [][]rune, errorCorrect bool) int {
 	// Find difference of 1 between two lines.
 	// Flip the different position
 	// Test for reflection
