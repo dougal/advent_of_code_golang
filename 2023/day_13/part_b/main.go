@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -22,14 +23,27 @@ func sumReflections(input io.Reader) int {
 	s := 0
 
 	for _, p := range puzzles {
-		s += checkReflectionHorizontal(p)
-		s += checkReflectionVertical(p)
+		origH:= checkReflectionHorizontal(p, false)
+		origV:= checkReflectionVertical(p, false)
+
+		newH := checkReflectionHorizontal(p, true)
+		newV := checkReflectionVertical(p, true)
+
+		// Only add the horizontal value if it is changed by the smudge.
+		if origH != newH {
+			s += newH
+		}
+
+		// Only add the vertical value if it is changed by the smudge.
+		if origV != newV {
+			s += newH
+		}
 	}
 
 	return s
 }
 
-func checkReflectionVertical(p [][]rune) int {
+func checkReflectionVertical(p [][]rune, errorCorrect bool) int {
 	// Rotate
 	p2 := make([][]rune, len(p[0]))
 	// for range p[0] {
@@ -42,15 +56,16 @@ func checkReflectionVertical(p [][]rune) int {
 		}
 	}
 
-	return checkReflectionHorizontal(p2) / 100
+	return checkReflectionHorizontal(p2, errorCorrect) / 100
 }
 
-func checkReflectionHorizontal(p [][]rune) int {
+func checkReflectionHorizontal(p [][]rune, errorCorrect bool) int {
 	// Find difference of 1 between two lines.
 	// Flip the different position
 	// Test for reflection
 Outer:
 	for i := 1; i < len(p); i++ {
+		var smudged bool
 		top := p[0:i]
 		bottom := p[i:]
 
@@ -62,9 +77,23 @@ Outer:
 		}
 
 		for j := 0; j < max; j++ {
-			if !equalIfOneFlipped(top[len(top)-1-j], bottom[j]) {
+			var s bool
+			var equal bool
+			if errorCorrect {
+				equal, s = equalIfOneFlipped(top[len(top)-1-j], bottom[j])
+			} else {
+				equal = slices.Equal(top[len(top)-1-j], bottom[j])
+			}
+			if !equal {
 				continue Outer
 			}
+
+			// A smudge was previously found
+			if smudged && s {
+				continue Outer
+			}
+
+			smudged = s
 		}
 
 		return i * 100
@@ -73,7 +102,7 @@ Outer:
 	return 0
 }
 
-func equalIfOneFlipped(r1, r2 []rune) bool {
+func equalIfOneFlipped(r1, r2 []rune) (bool, bool) {
 	var foundDiff bool
 	// fmt.Println(r1, r2)
 
@@ -82,15 +111,14 @@ func equalIfOneFlipped(r1, r2 []rune) bool {
 			// More than one flip
 			if foundDiff {
 				// fmt.Println("More than one difference")
-				return false
+				return false, false
 			} else {
 				foundDiff = true
 			}
 		}
 	}
 
-	// fmt.Println(foundDiff)
-	return true
+	return true, foundDiff
 }
 
 func parsePuzzles(input io.Reader) [][][]rune {
