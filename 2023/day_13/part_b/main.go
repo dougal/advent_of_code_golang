@@ -18,6 +18,7 @@ func main() {
 	fmt.Println(sumReflections(f))
 }
 
+// NOTE: Input should have final empty line
 func sumReflections(input io.Reader) int {
 	puzzles := parsePuzzles(input)
 	s := 0
