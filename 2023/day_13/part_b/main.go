@@ -26,19 +26,13 @@ func sumReflections(input io.Reader) int {
 		origH := horizontalIndexOfReflection(p)
 		origV := verticalIndexOfReflection(p)
 
-		newH := correctedHorizontalIndexOfReflection(p)
-		newV := correctedVerticalIndexOfReflection(p)
+		// Pass in the pre-corrected indexes so they may be skipped.
+		newH := correctedHorizontalIndexOfReflection(p, origH)
+		newV := correctedVerticalIndexOfReflection(p, origV)
 
-		// Only add the horizontal value if it is changed by the smudge.
-		if origH != newH {
-			s += newH * 100
-		}
-
-		// Only add the vertical value if it is changed by the smudge.
-		if origV != newV {
-			s += newV
-		}
-	}
+		s += newH * 100
+		s += newV
+}
 
 	return s
 }
@@ -59,7 +53,7 @@ func verticalIndexOfReflection(p [][]rune) int {
 	return horizontalIndexOfReflection(p2)
 }
 
-func correctedVerticalIndexOfReflection(p [][]rune) int {
+func correctedVerticalIndexOfReflection(p [][]rune, skipIndex int) int {
 	// Rotate
 	p2 := make([][]rune, len(p[0]))
 	// for range p[0] {
@@ -72,7 +66,7 @@ func correctedVerticalIndexOfReflection(p [][]rune) int {
 		}
 	}
 
-	return correctedHorizontalIndexOfReflection(p2)
+	return correctedHorizontalIndexOfReflection(p2, skipIndex)
 }
 
 func horizontalIndexOfReflection(p [][]rune) int {
@@ -104,12 +98,17 @@ Outer:
 	return 0
 }
 
-func correctedHorizontalIndexOfReflection(p [][]rune) int {
+func correctedHorizontalIndexOfReflection(p [][]rune, skipIndex int) int {
 	// Find difference of 1 between two lines.
 	// Flip the different position
 	// Test for reflection
 Outer:
 	for i := 1; i < len(p); i++ {
+
+		if i == skipIndex {
+			continue
+		}
+
 		var smudged bool
 		top := p[0:i]
 		bottom := p[i:]
