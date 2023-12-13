@@ -31,7 +31,7 @@ func sumReflections(input io.Reader) int {
 
 		// Only add the horizontal value if it is changed by the smudge.
 		if origH != newH {
-			s += newH
+			s += newH * 100
 		}
 
 		// Only add the vertical value if it is changed by the smudge.
@@ -56,7 +56,7 @@ func checkReflectionVertical(p [][]rune, errorCorrect bool) int {
 		}
 	}
 
-	return checkReflectionHorizontal(p2, errorCorrect) / 100
+	return checkReflectionHorizontal(p2, errorCorrect)
 }
 
 func checkReflectionHorizontal(p [][]rune, errorCorrect bool) int {
@@ -96,7 +96,7 @@ Outer:
 			smudged = s
 		}
 
-		return i * 100
+		return i
 
 	}
 	return 0
