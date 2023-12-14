@@ -18,6 +18,7 @@ func main() {
 }
 
 const cycles int = 1_000_000_000
+
 // const cycles int = 1000
 const roundRock rune = 'O'
 const cubeRock rune = '#'
@@ -28,11 +29,10 @@ func totalLoad(input io.Reader) int {
 	s := 0
 
 	for i := 0; i < cycles; i++ {
-		if i % 1000_000 == 0 {
+		if i%1000_000 == 0 {
 			fmt.Println(i, hits, misses)
 		}
-		field = tiltField(field)
-		field = rotateField(field)
+		field = tiltAndRotateField(field)
 	}
 
 	for _, line := range field {
@@ -47,30 +47,38 @@ func totalLoad(input io.Reader) int {
 	return s
 }
 
+var tiltAndRotateFieldCache = map[string][][]rune{}
+
+func tiltAndRotateField(field [][]rune) [][]rune {
+	cacheKey := fieldCacheKey(field)
+	if v, ok := tiltAndRotateFieldCache[cacheKey]; ok {
+		hits++
+		return v
+	}
+	misses++
+
+	field = tiltField(field)
+	field = rotateField(field)
+
+	tiltAndRotateFieldCache[cacheKey] = field
+
+	return field
+}
+
 var hits int
 var misses int
 
-var rotateFieldCache = map[string][][]rune{}
-
 func fieldCacheKey(field [][]rune) string {
-  var k string
+	var k string
 
 	for _, l := range field {
-    k += string(l)
+		k += string(l)
 	}
 
 	return k
 }
 
 func rotateField(field [][]rune) [][]rune {
-	cacheKey := fieldCacheKey(field)
-	if v, ok := rotateFieldCache[cacheKey]; ok {
-		hits++
-		return v
-	}
-
-	misses++
-
 	newField := make([][]rune, len(field[0]))
 
 	for _, row := range field {
@@ -78,8 +86,6 @@ func rotateField(field [][]rune) [][]rune {
 			newField[j] = append(newField[j], c)
 		}
 	}
-
-	rotateFieldCache[cacheKey] = newField
 
 	return newField
 }
@@ -92,16 +98,7 @@ func tiltField(field [][]rune) [][]rune {
 	return field
 }
 
-var tiltLineCache  = map[string][]rune{}
-
 func tiltLine(line []rune) []rune {
-	cacheKey := string(line)
-	if v, ok := tiltLineCache[cacheKey]; ok {
-		hits++
-		return v
-	}
-	misses++
-
 	currentObstacle := -1
 
 	for j, c := range line {
@@ -116,8 +113,6 @@ func tiltLine(line []rune) []rune {
 			}
 		}
 	}
-
-	tiltLineCache[cacheKey] = line
 
 	return line
 }
