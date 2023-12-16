@@ -21,7 +21,6 @@ func main() {
 // const cycles int = 1_000_000_000
 const cycles int = 1_000
 
-// const cycles int = 1000
 const roundRock rune = 'O'
 const cubeRock rune = '#'
 const space rune = '.'
