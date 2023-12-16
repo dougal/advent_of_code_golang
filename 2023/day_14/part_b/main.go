@@ -52,16 +52,17 @@ func (f Field) EqualTo(other Field) bool {
 }
 
 func (f Field) LoadOnNorth() int {
-	// TODO: Re-adjust for north.
 	s := 0
-	// for _, line := range field {
-	// 	for i, c := range line {
-	// 		switch c {
-	// 		case roundRock:
-	// 			s += len(line) - i
-	// 		}
-	// 	}
-	// }
+
+	for x := 0; x < len(f[0]); x++ {
+		for y := 0; y < len(f); y++ {
+			c := f[y][x]
+			switch c {
+			case roundRock:
+				s += len(f) - y
+			}
+		}
+	}
 
 	return s
 }

@@ -123,7 +123,7 @@ O`, `O
 
 	{`O
 .`,
-`O
+		`O
 .`},
 
 	{`.
@@ -171,6 +171,7 @@ func TestTiltNorth(t *testing.T) {
 		}
 	}
 }
+
 var tiltSouthCases = []struct {
 	in  string
 	exp string
@@ -183,7 +184,7 @@ O`},
 
 	{`O
 .`,
-`.
+		`.
 O`},
 
 	{`.
@@ -232,3 +233,46 @@ func TestTiltSouth(t *testing.T) {
 	}
 }
 
+var LoadOnNorthCases = []struct {
+	in  string
+	exp int
+}{
+	{`O`, 1},
+
+	{`.
+O`, 1},
+
+	{`O
+.`, 2},
+
+	{`.
+O
+.`, 2},
+
+	{`O
+.
+#`, 3},
+
+	{`.#
+#.
+.O
+..
+O.
+#.
+..
+#.`, 10},
+}
+
+func TestLoadOnNorth(t *testing.T) {
+	for caseNumber, c := range LoadOnNorthCases {
+		field := parseField(strings.NewReader(c.in))
+		expected := c.exp
+
+		actual := field.LoadOnNorth()
+
+		if actual != expected {
+			t.Errorf("Case #%d Expected: %d but got: %d", caseNumber, expected, actual)
+			break
+		}
+	}
+}
