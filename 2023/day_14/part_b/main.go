@@ -173,7 +173,6 @@ func parseField(input io.Reader) Field {
 		if line == "" {
 			continue
 		}
-		fmt.Println(line)
 		var row []rune
 		for _, c := range string(line) {
 			row = append(row, c)
