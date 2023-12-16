@@ -36,13 +36,9 @@ func totalLoad(input io.Reader) int {
 		// checkPoint = field
 
 		field.TiltNorth()
-		fmt.Println(field.String())
 		field.TiltWest()
-		fmt.Println(field.String())
 		field.TiltSouth()
-		fmt.Println(field.String())
 		field.TiltEast()
-		fmt.Println(field.String())
 
 		// Stable loop
 		// if field.EqualTo(checkPoint) {
@@ -174,6 +170,10 @@ func parseField(input io.Reader) Field {
 	var f Field
 
 	for _, line := range lines {
+		if line == "" {
+			continue
+		}
+		fmt.Println(line)
 		var row []rune
 		for _, c := range string(line) {
 			row = append(row, c)
