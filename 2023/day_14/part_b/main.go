@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -17,7 +18,8 @@ func main() {
 	fmt.Println(totalLoad(f))
 }
 
-const cycles int = 1_000_000_000
+// const cycles int = 1_000_000_000
+const cycles int = 1_000
 
 // const cycles int = 1000
 const roundRock rune = 'O'
@@ -29,26 +31,36 @@ type Field [][]rune
 func totalLoad(input io.Reader) int {
 	field := parseField(input)
 
-	var checkPoint Field
+	// var checkPoint Field
 	for i := 0; i < cycles; i++ {
-		checkPoint = field
+		// checkPoint = field
 
 		field.TiltNorth()
+		fmt.Println(field.String())
 		field.TiltWest()
+		fmt.Println(field.String())
 		field.TiltSouth()
+		fmt.Println(field.String())
 		field.TiltEast()
+		fmt.Println(field.String())
 
 		// Stable loop
-		if field.EqualTo(checkPoint) {
-			break
-		}
+		// if field.EqualTo(checkPoint) {
+		// 	break
+		// }
 	}
 
 	return field.LoadOnNorth()
 }
 
 func (f Field) EqualTo(other Field) bool {
-	return false
+	for i, row := range f {
+		if !slices.Equal(row, other[i]) {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (f Field) LoadOnNorth() int {
