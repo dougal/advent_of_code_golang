@@ -67,10 +67,11 @@ func (f Field) LoadOnNorth() int {
 }
 
 func (f *Field) TiltWest() {
-	for i, line := range (*f) {
+	for i, line := range *f {
 		currentObstacle := -1
 
-		for j, c := range line {
+		for j := 0; j < len(line); j++ {
+			c := line[j]
 			switch c {
 			case cubeRock:
 				currentObstacle = j
@@ -104,14 +105,14 @@ func parseField(input io.Reader) Field {
 
 	lines := strings.Split(string(s), "\n")
 
-	var f Field 
+	var f Field
 
 	for _, line := range lines {
 		var row []rune
 		for _, c := range string(line) {
 			row = append(row, c)
 		}
-		f= append(f, row)
+		f = append(f, row)
 	}
 
 	return f
