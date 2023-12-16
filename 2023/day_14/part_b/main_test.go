@@ -110,3 +110,64 @@ func TestTiltEast(t *testing.T) {
 		}
 	}
 }
+
+var tiltNorthCases = []struct {
+	in  string
+	exp string
+}{
+	{`O`, `O`},
+
+	{`.
+O`, `O
+.`},
+
+	{`O
+.`,
+`O
+.`},
+
+	{`.
+O
+.`, `O
+.
+.`},
+
+	{`#
+.
+O`, `#
+O
+.`},
+
+	{`.#
+#.
+.O
+..
+O.
+#.
+..
+#.`,
+		`.#
+#O
+O.
+..
+..
+#.
+..
+#.`},
+}
+
+func TestTiltNorth(t *testing.T) {
+	for caseNumber, c := range tiltNorthCases {
+		field := parseField(strings.NewReader(c.in))
+		expected := parseField(strings.NewReader(c.exp))
+
+		field.TiltNorth()
+
+		for i, row := range field {
+			if !slices.Equal(row, expected[i]) {
+				t.Errorf("Case #%d Expected:\n%s\nbut got:\n%s\n", caseNumber, expected.String(), field.String())
+				break
+			}
+		}
+	}
+}

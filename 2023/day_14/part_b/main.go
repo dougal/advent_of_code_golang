@@ -111,6 +111,23 @@ func (f *Field) TiltEast() {
 }
 
 func (f *Field) TiltNorth() {
+		for x := 0; x<len((*f)[0]); x++{
+		currentObstacle := -1
+
+		for y := 0; y < len((*f)); y++ {
+			c := (*f)[y][x]
+			switch c {
+			case cubeRock:
+				currentObstacle = y
+			case roundRock:
+				currentObstacle++
+				if currentObstacle != y {
+					(*f)[currentObstacle][x] = roundRock
+					(*f)[y][x] = space
+				}
+			}
+		}
+	}
 }
 
 func (f *Field) TiltSouth() {
