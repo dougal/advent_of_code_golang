@@ -49,14 +49,13 @@ var tiltWestCases = []struct {
 
 	{`.O`, `O.`},
 
-
 	{`..O`, `O..`},
 
 	{`#.O`, `#O.`},
 
 	{`#.O
 .#..O#.#`,
-`#O.
+		`#O.
 .#O..#.#`},
 }
 
@@ -66,6 +65,42 @@ func TestTiltWest(t *testing.T) {
 		expected := parseField(strings.NewReader(c.exp))
 
 		field.TiltWest()
+
+		for i, row := range field {
+			if !slices.Equal(row, expected[i]) {
+				t.Errorf("Case #%d Expected:\n%s\nbut got:\n%s\n", caseNumber, expected.String(), field.String())
+				break
+			}
+		}
+	}
+}
+
+var tiltEastCases = []struct {
+	in  string
+	exp string
+}{
+	{`O`, `O`},
+
+	{`O.`, `.O`},
+
+	{`.O`, `.O`},
+
+	{`.O.`, `..O`},
+
+	{`O.#`, `.O#`},
+
+	{`#O.
+.#O..#.#`,
+		`#.O
+.#..O#.#`},
+}
+
+func TestTiltEast(t *testing.T) {
+	for caseNumber, c := range tiltEastCases {
+		field := parseField(strings.NewReader(c.in))
+		expected := parseField(strings.NewReader(c.exp))
+
+		field.TiltEast()
 
 		for i, row := range field {
 			if !slices.Equal(row, expected[i]) {

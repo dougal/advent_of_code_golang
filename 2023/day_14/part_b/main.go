@@ -89,6 +89,25 @@ func (f *Field) TiltWest() {
 }
 
 func (f *Field) TiltEast() {
+	for i, line := range *f {
+		currentObstacle := len(line)
+
+		for j := len(line) - 1; j >= 0; j-- {
+			c := line[j]
+			switch c {
+			case cubeRock:
+				currentObstacle = j
+			case roundRock:
+				currentObstacle--
+				if currentObstacle != j {
+					line[currentObstacle] = roundRock
+					line[j] = space
+				}
+			}
+		}
+
+		(*f)[i] = line
+	}
 }
 
 func (f *Field) TiltNorth() {
