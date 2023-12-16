@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var cases = []struct {
+var totalLoadCases = []struct {
 	input    string
 	expected int
 }{
@@ -30,7 +30,7 @@ O.#..O.#.#
 }
 
 func TestTotalLoad(t *testing.T) {
-	for _, c := range cases {
+	for _, c := range totalLoadCases {
 		actual := totalLoad(strings.NewReader(c.input))
 		if actual != c.expected {
 			t.Errorf("Expected %d but got %d\n", c.expected, actual)
