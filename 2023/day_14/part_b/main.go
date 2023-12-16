@@ -96,25 +96,6 @@ func (f *Field) TiltNorth() {
 func (f *Field) TiltSouth() {
 }
 
-func tiltLine(line []rune) []rune {
-	currentObstacle := -1
-
-	for j, c := range line {
-		switch c {
-		case cubeRock:
-			currentObstacle = j
-		case roundRock:
-			currentObstacle++
-			if currentObstacle != j {
-				line[currentObstacle] = roundRock
-				line[j] = space
-			}
-		}
-	}
-
-	return line
-}
-
 func parseField(input io.Reader) Field {
 	s, err := io.ReadAll(input)
 	if err != nil {
