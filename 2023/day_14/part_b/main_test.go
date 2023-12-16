@@ -39,41 +39,37 @@ func TestTotalLoad(t *testing.T) {
 	}
 }
 
-var rotateClockwiseCases = []struct {
+var tiltWestCases = []struct {
 	in  string
 	exp string
 }{
 	{`O`, `O`},
 
-	{`O.`, `O
-.`},
+	{`O.`, `O.`},
 
-	{`O
-.`, `.O`},
+	{`.O`, `O.`},
 
-	{`AB
-CD`, `CA
-DB`},
 
-	{`ABC`, `A
-B
-C`},
+	{`..O`, `O..`},
 
-	{`A
-B
-C`, `CBA`},
+	{`#.O`, `#O.`},
+
+	{`#.O
+.#..O#.#`,
+`#O.
+.#O..#.#`},
 }
 
-func TestRotateClockwise(t *testing.T) {
-	for ci, c := range rotateClockwiseCases {
-		input := parseField(strings.NewReader(c.in))
+func TestTiltWest(t *testing.T) {
+	for caseNumber, c := range tiltWestCases {
+		field := parseField(strings.NewReader(c.in))
 		expected := parseField(strings.NewReader(c.exp))
 
-		actual := rotateClockwise(input)
+		field.TiltWest()
 
-		for i, row := range actual {
+		for i, row := range field {
 			if !slices.Equal(row, expected[i]) {
-				t.Errorf("Case #%d Expected:\n%s\nbut got:\n%s\n", ci, FieldToString(expected), FieldToString(actual))
+				t.Errorf("Case #%d Expected:\n%s\nbut got:\n%s\n", caseNumber, expected.String(), field.String())
 				break
 			}
 		}
