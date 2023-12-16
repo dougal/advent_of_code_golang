@@ -111,7 +111,7 @@ func (f *Field) TiltEast() {
 }
 
 func (f *Field) TiltNorth() {
-		for x := 0; x<len((*f)[0]); x++{
+	for x := 0; x < len((*f)[0]); x++ {
 		currentObstacle := -1
 
 		for y := 0; y < len((*f)); y++ {
@@ -131,6 +131,23 @@ func (f *Field) TiltNorth() {
 }
 
 func (f *Field) TiltSouth() {
+	for x := 0; x < len((*f)[0]); x++ {
+		currentObstacle := len((*f))
+
+		for y := len((*f)) - 1; y >= 0; y-- {
+			c := (*f)[y][x]
+			switch c {
+			case cubeRock:
+				currentObstacle = y
+			case roundRock:
+				currentObstacle--
+				if currentObstacle != y {
+					(*f)[currentObstacle][x] = roundRock
+					(*f)[y][x] = space
+				}
+			}
+		}
+	}
 }
 
 func parseField(input io.Reader) Field {
