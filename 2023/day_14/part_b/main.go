@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -25,17 +26,31 @@ const cubeRock rune = '#'
 const space rune = '.'
 
 func totalLoad(input io.Reader) int {
-	field := parseRocks(input)
+	north := parseField(input)
 	s := 0
 
+	// Spin from North to West, as Westward is how the tilt calculation works.
+	east := rotateClockwise(north)
+	south := rotateClockwise(east)
+	west := rotateClockwise(south)
+	lastWest := west
+
 	for i := 0; i < cycles; i++ {
-		if i%1000_000 == 0 {
-			fmt.Println(i, hits, misses)
+		north = tiltAndRotateField(west)
+		east = tiltAndRotateField(north)
+		south = tiltAndRotateField(east)
+		west = tiltAndRotateField(east)
+
+		// Stable loop
+		for i, line := range west {
+      if !slices.Equal(line, lastWest[i]) {
+				continue
+			}
 		}
-		field = tiltAndRotateField(field)
+		break
 	}
 
-	for _, line := range field {
+	for _, line := range west {
 		for i, c := range line {
 			switch c {
 			case roundRock:
@@ -57,8 +72,8 @@ func tiltAndRotateField(field [][]rune) [][]rune {
 	}
 	misses++
 
+	field = rotateClockwise(field)
 	field = tiltField(field)
-	field = rotateField(field)
 
 	tiltAndRotateFieldCache[cacheKey] = field
 
@@ -78,12 +93,12 @@ func fieldCacheKey(field [][]rune) string {
 	return k
 }
 
-func rotateField(field [][]rune) [][]rune {
+func rotateClockwise(field [][]rune) [][]rune {
 	newField := make([][]rune, len(field[0]))
 
 	for _, row := range field {
 		for j, c := range row {
-			newField[j] = append(newField[j], c)
+			newField[j] = append([]rune{c}, newField[j]...)
 		}
 	}
 
@@ -117,7 +132,7 @@ func tiltLine(line []rune) []rune {
 	return line
 }
 
-func parseRocks(input io.Reader) [][]rune {
+func parseField(input io.Reader) [][]rune {
 	s, err := io.ReadAll(input)
 	if err != nil {
 		log.Fatal(err)
@@ -125,14 +140,25 @@ func parseRocks(input io.Reader) [][]rune {
 
 	lines := strings.Split(string(s), "\n")
 
-	field := make([][]rune, len(lines[0]))
+	var field [][]rune
 
-	// Put rows into columns, so move west/left instead of to top
 	for _, line := range lines {
-		for i, c := range string(line) {
-			field[i] = append(field[i], c)
+		var row []rune
+		for _, c := range string(line) {
+			row = append(row, c)
 		}
+		field = append(field, row)
 	}
 
 	return field
+}
+
+func FieldToString(field [][]rune) string {
+	var s string
+
+	for _, row := range field {
+		s += string(row) + "\n"
+	}
+
+	return s
 }
