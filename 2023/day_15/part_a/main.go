@@ -34,8 +34,8 @@ func hash(in string) int {
 	var s int
 
 	for _, c := range in {
-	  if string(c) == "\n" {
-		  continue
+		if string(c) == "\n" {
+			continue
 		}
 
 		s += int(c)
