@@ -21,9 +21,7 @@ func SumHashes(input io.Reader) int {
 	s := 0
 
 	all, _ := io.ReadAll(input)
-	// Split the lines so there is only one with no newlines.
-	lines := strings.Split(string(all), "\n")
-	words := strings.Split(lines[0], ",")
+	words := strings.Split(string(all), ",")
 
 	for _, w := range words {
 		s += hash(w)
@@ -36,6 +34,10 @@ func hash(in string) int {
 	var s int
 
 	for _, c := range in {
+	  if string(c) == "\n" {
+		  continue
+		}
+
 		s += int(c)
 		s *= 17
 		s = s % 256
