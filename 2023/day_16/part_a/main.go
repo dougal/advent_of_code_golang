@@ -62,7 +62,6 @@ var MoveBeamHits = map[string]bool{}
 
 func MoveBeam(matrix [][]rune, visited *[][]bool, x, y, vecX, vecY int) {
 	key := fmt.Sprintf("%d,%d,%d,%d", x, y, vecX, vecY)
-	fmt.Println(key)
 
 	if _, ok := MoveBeamHits[key]; ok {
 		return
