@@ -14,10 +14,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(CountEnergizedTiles(f))
+	fmt.Println(MaxEnergizedTiles(f))
 }
 
-func CountEnergizedTiles(input io.Reader) int {
+func MaxEnergizedTiles(input io.Reader) int {
 	scanner := bufio.NewScanner(input)
 	scanner.Split(bufio.ScanLines)
 
@@ -27,7 +27,61 @@ func CountEnergizedTiles(input io.Reader) int {
 		row := []rune(scanner.Text())
 		matrix = append(matrix, row)
 	}
+	var max int
 
+	// x ->
+	// y
+	// |
+	// v
+
+	// Left side
+	for i := 0; i < len(matrix); i++ {
+		vecX, vecY := 1, 0
+		x, y := -1, i
+
+		c := TryBeamPosition(matrix, x, y, vecX, vecY)
+		if c > max {
+			max = c
+		}
+	}
+
+	// Right side
+	for i := 0; i < len(matrix); i++ {
+		vecX, vecY := -1, 0
+		x, y := len(matrix[0]), i
+
+		c := TryBeamPosition(matrix, x, y, vecX, vecY)
+		if c > max {
+			max = c
+		}
+	}
+
+	// Top side
+	for i := 0; i < len(matrix[0]); i++ {
+		vecX, vecY := 0, 1
+		x, y := i, -1
+
+		c := TryBeamPosition(matrix, x, y, vecX, vecY)
+		if c > max {
+			max = c
+		}
+	}
+
+	// Bottom side
+	for i := 0; i < len(matrix[0]); i++ {
+		vecX, vecY := 0, -1
+		x, y := i, len(matrix)
+
+		c := TryBeamPosition(matrix, x, y, vecX, vecY)
+		if c > max {
+			max = c
+		}
+	}
+
+	return max
+}
+
+func TryBeamPosition(matrix [][]rune, x, y, vecX, vecY int) int {
 	visited := make([][]bool, len(matrix))
 	for y := range visited {
 		visited[y] = make([]bool, len(matrix[y]))
@@ -37,9 +91,6 @@ func CountEnergizedTiles(input io.Reader) int {
 	// y
 	// |
 	// v
-
-	vecX, vecY := 1, 0
-	x, y := -1, 0
 
 	// Reset the cache
 	MoveBeamHits = map[string]bool{}

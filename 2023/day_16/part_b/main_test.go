@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var CountEnergizedTilesCases = []struct {
+var MaxEnergizedTilesCases = []struct {
 	input    string
 	expected int
 }{
@@ -34,12 +34,12 @@ var CountEnergizedTilesCases = []struct {
 ..../.\\..
 .-.-/..|..
 .|....-|.\
-..//.|....`, 46},
+..//.|....`, 51},
 }
 
 func TestSomething(t *testing.T) {
-	for _, c := range CountEnergizedTilesCases {
-		actual := CountEnergizedTiles(strings.NewReader(c.input))
+	for _, c := range MaxEnergizedTilesCases {
+		actual := MaxEnergizedTiles(strings.NewReader(c.input))
 		if actual != c.expected {
 			t.Errorf("Expected %d but got %d\n", c.expected, actual)
 		}
