@@ -41,6 +41,9 @@ func CountEnergizedTiles(input io.Reader) int {
 	vecX, vecY := 1, 0
 	x, y := -1, 0
 
+	// Reset the cache
+	MoveBeamHits = map[string]bool{}
+
 	MoveBeam(matrix, &visited, x, y, vecX, vecY)
 
 	var c int
@@ -55,7 +58,18 @@ func CountEnergizedTiles(input io.Reader) int {
 	return c
 }
 
+var MoveBeamHits = map[string]bool{}
+
 func MoveBeam(matrix [][]rune, visited *[][]bool, x, y, vecX, vecY int) {
+	key := fmt.Sprintf("%d,%d,%d,%d", x, y, vecX, vecY)
+	fmt.Println(key)
+
+	if _, ok := MoveBeamHits[key]; ok {
+		return
+	} else {
+		MoveBeamHits[key] = true
+	}
+
 	newX := x + vecX
 	newY := y + vecY
 
