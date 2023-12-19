@@ -59,8 +59,8 @@ func LavaVolume(input io.Reader) int {
 	// Work out the matrix size, and the start position
 	width := maxRight - maxLeft + 1
 	height := maxDown - maxUp + 1
-	y = maxLeft * -1
-	x = maxUp * -1
+	y = maxUp * -1
+	x = maxLeft * -1
 
 	matrix := make([][]rune, height)
 	for i := range matrix {

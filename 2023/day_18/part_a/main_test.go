@@ -22,6 +22,13 @@ D 2 (#FF0000)
 L 2 (#FF0000)
 U 2 (#FF0000)`, 9},
 
+  // 9x9 solid, starts going left
+{`L 1 (#FF0000)
+U 1 (#FF0000)
+R 2 (#FF0000)
+D 2 (#FF0000)
+L 2 (#FF0000)`, 9},
+
 	// Provided example
 	{`R 6 (#70c710)
 D 5 (#0dc571)
