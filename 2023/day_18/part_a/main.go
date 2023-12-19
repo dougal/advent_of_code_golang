@@ -97,7 +97,7 @@ func LavaVolume(input io.Reader) int {
 			}
 		}
 	}
-	PrintMatrix(matrix)
+	// PrintMatrix(matrix)
 
 	// Mark outside
 	// Left side
@@ -120,7 +120,7 @@ func LavaVolume(input io.Reader) int {
 		matrix = MarkOutside(matrix, i, len(matrix)-1)
 	}
 
-	PrintMatrix(matrix)
+	// PrintMatrix(matrix)
 
 	// Count total - outside
 	var s int
