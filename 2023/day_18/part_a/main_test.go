@@ -9,10 +9,20 @@ var LavaVolumeCases = []struct {
 	input    string
 	expected int
 }{
+  // Solid square
   {`R 1 (#FF0000)
 D 1 (#00FF00)
 L 1 (#0000FF)
 U 1 (#F0000F)`, 4},
+
+  // 9x9 solid, starts in middle
+	{`U 1 (#FF0000)
+R 1 (#FF0000)
+D 2 (#FF0000)
+L 2 (#FF0000)
+U 2 (#FF0000)`, 9},
+
+	// Provided example
 	{`R 6 (#70c710)
 D 5 (#0dc571)
 L 2 (#5713f0)
