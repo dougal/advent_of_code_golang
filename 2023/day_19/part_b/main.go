@@ -36,10 +36,7 @@ func CountAcceptedCombinations(input io.Reader) int {
 		workflows[workflow.label] = workflow
 	}
 
-	// Start at "in", follow each branch until reach "A" or "R"
-	// Sum combinations
-
-	return workflows["in"].Follow(workflows, map[string]Range{})
+	return RunWorkflow(workflows, map[string]Range{}, "in", []string{})
 }
 
 type Workflow struct {
@@ -85,34 +82,31 @@ type Range struct {
 	max int
 }
 
-func (w Workflow) Follow(workflows map[string]Workflow, rangeSet map[string]Range) int {
-	fmt.Println(w.label)
-	// Loop through each rule
-	// If A, return the combinations based on the partition rules
-	// If R, return 0
-	// Merge the partition with the rule
-	// Call Follow again with the new partition
-	// Sum the returns and return
+func RunWorkflow(workflows map[string]Workflow, rangeSet map[string]Range, workflowLabel string, chain []string) int {
+	chain = append(chain, workflowLabel)
+	if workflowLabel == "A" {
+		c := 1
+		for _, r := range rangeSet {
+			c *= (r.max - r.min) // TODO: needs a +1?
+			// fmt.Println(c)
+		}
+		// fmt.Println(chain, rangeSet, c)
+		return c
+
+	}
+
+	if workflowLabel == "R" {
+		return 0
+	}
+
+	w := workflows[workflowLabel]
 	var combos int
 	for _, rule := range w.rules {
-		if rule.dest == "A" {
+		newRangeset := map[string]Range{}
 
-			c := 1
-			for _, r := range rangeSet {
-				c *= (r.max - r.min) // TODO: needs a +1?
-				fmt.Println(c)
-			}
-			combos += c
-			break
-
+		for k, v := range rangeSet {
+			newRangeset[k] = v
 		}
-
-		if rule.dest == "R" {
-			combos += 0
-			break
-		}
-
-		newRangeset := rangeSet
 
 		if _, ok := newRangeset[rule.variable]; !ok {
 			newRangeset[rule.variable] = Range{0, 4000}
@@ -131,24 +125,10 @@ func (w Workflow) Follow(workflows map[string]Workflow, rangeSet map[string]Rang
 			}
 		}
 
-		combos += workflows[rule.dest].Follow(workflows, rangeSet)
+		combos += RunWorkflow(workflows, newRangeset, rule.dest, chain)
 	}
 
-	// Handle the defaultDest
-	if w.defaultDest == "A" {
-
-		c := 1
-		for _, r := range rangeSet {
-			c *= (r.max - r.min) // TODO: needs a +1?
-				fmt.Println(c)
-		}
-		combos += c
-
-	} else if w.defaultDest == "R" {
-		combos += 0
-	} else {
-		combos += workflows[w.defaultDest].Follow(workflows, rangeSet)
-	}
+	combos += RunWorkflow(workflows, rangeSet, w.defaultDest, chain)
 
 	return combos
 }
