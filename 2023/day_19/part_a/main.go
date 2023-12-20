@@ -100,10 +100,6 @@ func (w Workflow) CheckPart(p map[string]int) string {
 		  if p[rule.variable] < rule.count {
 			  return rule.dest
 			}
-		case "=":
-		  if p[rule.variable] < rule.count {
-			  return rule.dest
-			}
 		}
 	}
 
