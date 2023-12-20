@@ -36,7 +36,13 @@ func CountAcceptedCombinations(input io.Reader) int {
 		workflows[workflow.label] = workflow
 	}
 
-	return RunWorkflow(workflows, map[string]Range{}, "in", []string{})
+	rangeSet := map[string]Range{
+		"x": {0, 4000},
+		"m": {0, 4000},
+		"a": {0, 4000},
+		"s": {0, 4000},
+	}
+	return RunWorkflow(workflows, rangeSet, "in", []string{})
 }
 
 type Workflow struct {
@@ -82,17 +88,17 @@ type Range struct {
 	max int
 }
 
+func (r Range) Combos() int {
+	return r.max - r.min
+}
+
 func RunWorkflow(workflows map[string]Workflow, rangeSet map[string]Range, workflowLabel string, chain []string) int {
 	chain = append(chain, workflowLabel)
 	if workflowLabel == "A" {
-		c := 1
-		for _, r := range rangeSet {
-			c *= (r.max - r.min) // TODO: needs a +1?
-			// fmt.Println(c)
-		}
-		// fmt.Println(chain, rangeSet, c)
-		return c
-
+		return rangeSet["x"].Combos() *
+			rangeSet["m"].Combos() *
+			rangeSet["a"].Combos() *
+			rangeSet["s"].Combos()
 	}
 
 	if workflowLabel == "R" {
@@ -106,10 +112,6 @@ func RunWorkflow(workflows map[string]Workflow, rangeSet map[string]Range, workf
 
 		for k, v := range rangeSet {
 			newRangeset[k] = v
-		}
-
-		if _, ok := newRangeset[rule.variable]; !ok {
-			newRangeset[rule.variable] = Range{0, 4000}
 		}
 
 		r := newRangeset[rule.variable]
