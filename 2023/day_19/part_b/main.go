@@ -92,13 +92,18 @@ func (r Range) Combos() int {
 	return r.max - r.min
 }
 
+func RangeSetCombos(rangeSet map[string]Range) int {
+	return rangeSet["x"].Combos() *
+		rangeSet["m"].Combos() *
+		rangeSet["a"].Combos() *
+		rangeSet["s"].Combos()
+}
+
 func RunWorkflow(workflows map[string]Workflow, rangeSet map[string]Range, workflowLabel string, chain []string) int {
 	chain = append(chain, workflowLabel)
+	// fmt.Println(chain, RangeSetCombos(rangeSet))
 	if workflowLabel == "A" {
-		return rangeSet["x"].Combos() *
-			rangeSet["m"].Combos() *
-			rangeSet["a"].Combos() *
-			rangeSet["s"].Combos()
+		return RangeSetCombos(rangeSet)
 	}
 
 	if workflowLabel == "R" {
@@ -107,6 +112,12 @@ func RunWorkflow(workflows map[string]Workflow, rangeSet map[string]Range, workf
 
 	w := workflows[workflowLabel]
 	var combos int
+
+	defaultRangeset := map[string]Range{}
+	for k, v := range rangeSet {
+		defaultRangeset[k] = v
+	}
+
 	for _, rule := range w.rules {
 		newRangeset := map[string]Range{}
 
@@ -118,19 +129,24 @@ func RunWorkflow(workflows map[string]Workflow, rangeSet map[string]Range, workf
 		// Merge in the new rule
 		switch rule.operator {
 		case ">":
-			if rule.count > r.min {
+			if rule.count >= r.min {
 				newRangeset[rule.variable] = Range{rule.count, r.max}
+				defaultRangeset[rule.variable] = Range{r.min, rule.count}
 			}
 		case "<":
-			if rule.count < r.max {
+			if rule.count <= r.max {
 				newRangeset[rule.variable] = Range{r.min, rule.count}
+				defaultRangeset[rule.variable] = Range{rule.count, r.max}
 			}
 		}
 
+    // fmt.Println(newRangeset)
 		combos += RunWorkflow(workflows, newRangeset, rule.dest, chain)
 	}
 
-	combos += RunWorkflow(workflows, rangeSet, w.defaultDest, chain)
+	// Only pass the remainder to the default destination.
+  // fmt.Println(defaultRangeset)
+	combos += RunWorkflow(workflows, defaultRangeset, w.defaultDest, chain)
 
 	return combos
 }
