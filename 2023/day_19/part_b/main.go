@@ -118,6 +118,8 @@ func RunWorkflow(workflows map[string]Workflow, rangeSet map[string]Range, workf
 		defaultRangeset[k] = v
 	}
 
+  // fmt.Println("Initial: ", defaultRangeset)
+
 	for _, rule := range w.rules {
 		newRangeset := map[string]Range{}
 
@@ -125,7 +127,9 @@ func RunWorkflow(workflows map[string]Workflow, rangeSet map[string]Range, workf
 			newRangeset[k] = v
 		}
 
-		r := newRangeset[rule.variable]
+    // Does this actually need to be the defaultRangeset so that all the
+    // remainders go to the default rule.
+		r := defaultRangeset[rule.variable]
 		// Merge in the new rule
 		switch rule.operator {
 		case ">":
@@ -141,11 +145,12 @@ func RunWorkflow(workflows map[string]Workflow, rangeSet map[string]Range, workf
 		}
 
     // fmt.Println(newRangeset)
+    // fmt.Println("Outbound: ", newRangeset)
 		combos += RunWorkflow(workflows, newRangeset, rule.dest, chain)
 	}
 
 	// Only pass the remainder to the default destination.
-  // fmt.Println(defaultRangeset)
+  // fmt.Println("Default: ", defaultRangeset)
 	combos += RunWorkflow(workflows, defaultRangeset, w.defaultDest, chain)
 
 	return combos
