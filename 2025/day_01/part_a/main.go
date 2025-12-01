@@ -33,12 +33,10 @@ func numPositionZeros(input io.Reader) int {
 			log.Fatal(err)
 		}
 
-		var change int
+		change := int(c)
 		if dir == 'L' {
-			change = (100 - (int(c) % 100))
-		} else {
-			change = int(c) % 100
-		}
+			change *= -1
+		} 
 
 		curPos = (curPos + change) % 100
 
